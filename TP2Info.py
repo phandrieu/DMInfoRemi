@@ -53,10 +53,8 @@ P = [[2], [8,4], [1,3,5], [7,0,8,6], [6, 3, 10, 5, 1]]
 
 def somme_pyramide(P, i, j):
     n = len(P)
-
     if i == n-1:
         return P[i][j]
-
     else:
        return P[i][j] + max(somme_pyramide(P, i+1,j), somme_pyramide(P, i+1, j+1))
 
@@ -67,21 +65,13 @@ def somme_pyramide(P, i, j):
 #-------------------------------------------------------------
 
 def somme_pyramide_memo(P, i, j):
-
+    dico = {}
     def somme_pyramide_memo_aux(P, i, j):
         if i == n-1:
             dico[(i,j)] = P[i][j]
             return p[i][j]
-
         if (i,j) in dico:
             return dico[(i,j)]
-
         else:
             a = P[i][j] + max(somme_pyramide_memo_aux(P, i+1, j), somme_pyramide_memo_aux(P, i+1, j+1))
-
     return a
-
-
-
-
-
