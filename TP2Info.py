@@ -1,4 +1,5 @@
 import numpy as np
+from copy import deepcopy
 #-------------------------------------------------------------
 #effectifs
 #-------------------------------------------------------------
@@ -58,20 +59,68 @@ def somme_pyramide(P, i, j):
     else:
        return P[i][j] + max(somme_pyramide(P, i+1,j), somme_pyramide(P, i+1, j+1))
 
-
+print(somme_pyramide(P, 0, 0))
 
 #-------------------------------------------------------------
 #somme_pyramide_memo
 #-------------------------------------------------------------
 
-def somme_pyramide_memo(P, i, j):
+def somme_pyramide_memo(P):
     dico = {}
     def somme_pyramide_memo_aux(P, i, j):
+        n = len(P)
         if i == n-1:
             dico[(i,j)] = P[i][j]
-            return p[i][j]
+            return P[i][j]
         if (i,j) in dico:
             return dico[(i,j)]
         else:
             a = P[i][j] + max(somme_pyramide_memo_aux(P, i+1, j), somme_pyramide_memo_aux(P, i+1, j+1))
+        return a
+    a = somme_pyramide_memo_aux(P, 0, 0)
     return a
+
+print(somme_pyramide_memo(P))
+
+#-------------------------------------------------------------
+#somme_pyramide_asc
+#-------------------------------------------------------------
+
+def somme_pyramide_asc(P):
+    Pprime = deepcopy(P) 
+    n = len(P)
+    for i in range(n-2, -1, -1):
+        for j in range(len(Pprime[i])):
+            Pprime[i][j] += max(Pprime[i+1][j], Pprime[i+1][j+1])
+    return Pprime[0][0]
+
+print(somme_pyramide_asc(P))
+
+#-------------------------------------------------------------
+#somme_pyramide_asc_chemin
+#-------------------------------------------------------------
+
+def somme_pyramide_asc_chemin(P):
+    Pprime = deepcopy(P)
+    n = len(P)
+    chemin = []
+    for i in range(n-2, -1, -1):
+        for j in range(len(Pprime[i])):
+            if Pprime[i+1][j] > Pprime[i+1][j+1]:
+                Pprime[i][j] += Pprime[i+1][j]
+            else:
+                Pprime[i][j] += Pprime[i+1][j+1]
+    somme = Pprime[0][0]
+    i = 0
+    j = 0
+    chemin.append(P[0][0])
+    while i < n-1:
+        if Pprime[i+1][j] > Pprime[i+1][j+1]:
+            chemin.append(P[i+1][j])
+            i += 1
+        else:
+            chemin.append(P[i+1][j+1])
+            i += 1
+            j += 1
+    return somme, chemin
+print(somme_pyramide_asc_chemin(P))
